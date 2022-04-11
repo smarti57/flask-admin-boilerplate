@@ -13,3 +13,5 @@ mongoconnection = MongoClient(
     #'mongodb+srv://{user}:{password}@{host}:'
     #'{port}/{namespace}?retryWrites=false'.format(**connection_params)
 #pymongo.MongoClient("mongodb+srv://flaskdb_user:<password>@cluster0.xrgdk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+
+db = mongoconnection.dashboardDb
