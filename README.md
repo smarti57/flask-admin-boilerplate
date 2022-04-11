@@ -1,4 +1,4 @@
-# [Flask Admin Boilerplate with SB Admin 2](https://flask-admin-boilerplate.herokuapp.com/)
+# [JRG Watr Dashboard with SB Admin 2](https://flask-admin-boilerplate.herokuapp.com/)
 
 ![](screenshot/screenshot.png)
 
