@@ -1,6 +1,9 @@
 from flask import render_template, request, redirect, url_for, session
 from app import app
 from model import *
+import datetime
+
+
 
 @app.route('/', methods=["GET"])
 def home():
@@ -77,6 +80,32 @@ def cards():
 def charts():
     return render_template("charts.html")
 
+#Devices Page
+@app.route('/devices', methods=["GET"])
+def devices():
+
+    # specify the collections name
+    devices = db.devices
+    datetimenow = datetime.datetime.now()
+    # convert the mongodb object to a list
+    data = list(devices.find())
+
+    return render_template("devices.html", device_info=data, timenow = datetimenow)
+
+
+#Maps Page
+@app.route('/maps', methods=["GET"])
+def maps():
+
+    # specify the collections name
+ 
+    devices = db.devices
+    datetimenow = datetime.datetime.now()
+    # convert the mongodb object to a list
+    data = list(devices.find({},{"_id": 0,"Last Meter Reading": 0, "Last Reported": 0, "Owner": 0, "Installation Location":0, "Last Reported": 0, "Voltage": 0}))
+
+    return render_template("maps.html", device_data=data, timenow = datetimenow)
+
 #Tables Page
 @app.route('/tables', methods=["GET"])
 def tables():
@@ -101,3 +130,17 @@ def utilitiescolor():
 @app.route('/utilities-other', methods=["GET"])
 def utilitiesother():
     return render_template("utilities-other.html")
+
+
+@app.route('/user/<username>')
+
+def user(username):
+#    user = User.query.filter_by(username=username).first_or_404()
+    users = db.users
+    user = users.find_one({"username": username})
+    
+    posts = [
+        {'author': user, 'body': 'Test post #1'},
+        {'author': user, 'body': 'Test post #2'}
+    ]
+    return render_template('user.html', user=user, posts=posts)
