@@ -5,7 +5,7 @@ connection_params = configuration.connection_params
 
 #connect to mongodb
 mongoconnection = MongoClient(
-    'mongodb+srv://{user}:{password}@{host}:{port}'
+    'mongodb+srv://{user}:{password}@{host}'
     '/{namespace}?retryWrites=true&w=majority'.format(**connection_params)
 )
 
