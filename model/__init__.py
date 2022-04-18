@@ -21,7 +21,7 @@ def checkloginpassword():
     password = request.form["password"]
     hashpassword = getHashed(password)
     if hashpassword == check["password"]:
-        sendmail(subject="Login on JRG Watr Dashboard", sender="JRG Watr Dashboard", recipient=check["email"], body="You successfully logged in on JRG Watr Dashboard")
+#        sendmail(subject="Login on JRG Watr Dashboard", sender="JRG Watr Dashboard", recipient=check["email"], body="You successfully logged in on JRG Watr Dashboard")
         session["username"] = username
         return "correct"
     else:
