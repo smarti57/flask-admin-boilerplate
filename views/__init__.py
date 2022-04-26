@@ -92,7 +92,6 @@ def devices():
 
     return render_template("devices.html", device_info=data, timenow = datetimenow)
 
-
 #Maps Page
 @app.route('/maps', methods=["GET"])
 def maps():
@@ -109,7 +108,12 @@ def maps():
 #Tables Page
 @app.route('/tables', methods=["GET"])
 def tables():
-    return render_template("tables.html")
+      # specify the collections name
+    reports = db.reports
+    # convert the mongodb object to a list
+    data = list(reports.find())
+
+    return render_template("tables.html",reports_info=data)
 
 #Utilities-animation
 @app.route('/utilities-animation', methods=["GET"])
