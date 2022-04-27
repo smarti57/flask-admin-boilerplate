@@ -109,7 +109,7 @@ def maps():
 @app.route('/tables', methods=["GET"])
 def tables():
       # specify the collections name
-    reports = db.reports
+    reports = db.readings
     # convert the mongodb object to a list
     data = list(reports.find())
 
