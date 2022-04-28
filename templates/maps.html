@@ -2,65 +2,68 @@
 <script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
 
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
+<!-- Begin Page Content -->
+<div class="container-fluid">
+  <style>
+    .marker {
+        border: none;
+        cursor: pointer;
+        height: 32px;
+        width: 32px;
+        background-image: url(static/marker.png);
+        background-color: rgba(0, 0, 0, 0);
+        transform: translate(28px, 56px, 0);
+      }
+</style>
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">Map</h1>
+<p class="mb-4">This is the Map Page</a>.</p>
 
-          <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Map</h1>
-          <p class="mb-4">This is the Map Page</a>.</p>
+<!-- Content Row -->
+<div class="row">
+           
+<div id='map' style='width: 800px; height: 600px;'>
 
-          <!-- Content Row -->
-          <div class="row">
-          
-      
-
-
-          
-<div id='map' style='width: 800px; height: 600px;'></div>
-<script>
-mapboxgl.accessToken = 'pk.eyJ1Ijoic21hcnRpNTciLCJhIjoiY2t6NXI1N2M1MHQ4dDJ3cDFobWp3bTIycSJ9.9_SviVjdOQNyj4NPg3iXOw';
-var map = new mapboxgl.Map({
-container: 'map',
-style: 'mapbox://styles/mapbox/streets-v11'
-});
-
-
-
-map.on('load', function () {
-    // Add this to end of function
-    var stop_locations = {{ device_data|safe }}
-    stop_locations.forEach(function(marker) {
-        var el = document.createElement('div');
-        el.className = 'marker';
-        el.style.left = '-15px';
-        el.style.top = '-32px';
-
-        new mapboxgl.Marker(el)
-            .setLngLat(marker.geometry.coordinates)
-            .addTo(map);
+  {% block javascript %}
+    <script>
+    //device_data = JSON.parse({{ device_data | tojson }})
+    device_data = {{ device_data | tojson }}
+    mapboxgl.accessToken = 'pk.eyJ1Ijoic21hcnRpNTciLCJhIjoiY2t6NXI1N2M1MHQ4dDJ3cDFobWp3bTIycSJ9.9_SviVjdOQNyj4NPg3iXOw';
+    var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/outdoors-v11'
     });
-});
 
-
-</script>     
-          
-.marker {
-  border: none;
-  cursor: pointer;
-  height: 32px;
-  width: 32px;
-  background-image: url(static/marker.png);
-  background-color: rgba(0, 0, 0, 0);
-  transform: translate(28px, 56px, 0);
-}
+    map.on('load', function () {
+      // Add this to end of function
+      //var stop_locations = {{ device_data|safe }}
+      var stop_locations = device_data
+      stop_locations.forEach(function(marker) {
+          var el = document.createElement('div');
+          el.className = 'marker';
+          el.style.left = '-15px';
+          el.style.top = '-32px';
         
-          </div>
+          new mapboxgl.Marker(el)
+              .setLngLat([marker.lat,marker.lng])
+              .addTo(map);
+      });
+    });
 
-        </div>
-        <!-- /.container-fluid -->
+    </script>    
 
-      </div>
-      <!-- End of Main Content -->
+    
+  {% endblock %}
+
+   
+        
+</div>
+
+</div>
+<!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
 
       <!-- Footer -->
       <footer class="sticky-footer bg-white">
@@ -72,11 +75,7 @@ map.on('load', function () {
       </footer>
       <!-- End of Footer -->
 
-    </div>
-    <!-- End of Content Wrapper -->
 
-  </div>
-  <!-- End of Page Wrapper -->
 
   <!-- Scroll to Top Button-->
   <a class="scroll-to-top rounded" href="#page-top">
@@ -93,13 +92,7 @@ map.on('load', function () {
   <!-- Custom scripts for all pages-->
   <script src="static/js/sb-admin-2.min.js"></script>
 
-  <!-- Page level plugins -->
-  <script src="static/vendor/chart.js/Chart.min.js"></script>
 
-  <!-- Page level custom scripts -->
-  <script src="static/js/demo/chart-area.js"></script>
-  <script src="static/js/demo/chart-pie.js"></script>
-  <script src="static/js/demo/chart-bar.js"></script>
 
 </body>
 

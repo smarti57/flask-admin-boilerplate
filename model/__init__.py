@@ -6,7 +6,6 @@ from helpers.mailer import *
 from bson import json_util, ObjectId
 import json
 
-
 def checkloginusername():
     username = request.form["username"]
     check = db.users.find_one({"username": username})
@@ -27,7 +26,6 @@ def checkloginpassword():
     else:
         return "wrong"
     
-
 def checkusername():
     username = request.form["username"]
     check = db.users.find_one({"username": username})
