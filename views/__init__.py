@@ -83,37 +83,46 @@ def charts():
 #Devices Page
 @app.route('/devices', methods=["GET"])
 def devices():
+    if "username" in session:
+            # specify the collections name
+        devices = db.devices
+        datetimenow = datetime.datetime.now()
+        # convert the mongodb object to a list
+        data = list(devices.find())
 
-    # specify the collections name
-    devices = db.devices
-    datetimenow = datetime.datetime.now()
-    # convert the mongodb object to a list
-    data = list(devices.find())
+        return render_template("devices.html", device_info=data, timenow = datetimenow)
+    else:
+        return render_template('login.html')
 
-    return render_template("devices.html", device_info=data, timenow = datetimenow)
 
 #Maps Page
 @app.route('/maps', methods=["GET"])
 def maps():
+    if "username" in session:
+        devices = db.devices
+        datetimenow = datetime.datetime.now()
+        # convert the mongodb object to a list
+        data = list(devices.find({},{"_id": 0,"Last Meter Reading": 0, "Last Reported": 0, "Owner": 0, "Installation Location":0, "Last Reported": 0, "Voltage": 0}))
 
+        return render_template("maps.html", device_data=data, timenow = datetimenow)
+    else:
+        return render_template('login.html')
     # specify the collections name
  
-    devices = db.devices
-    datetimenow = datetime.datetime.now()
-    # convert the mongodb object to a list
-    data = list(devices.find({},{"_id": 0,"Last Meter Reading": 0, "Last Reported": 0, "Owner": 0, "Installation Location":0, "Last Reported": 0, "Voltage": 0}))
 
-    return render_template("maps.html", device_data=data, timenow = datetimenow)
 
 #Tables Page
 @app.route('/tables', methods=["GET"])
 def tables():
-      # specify the collections name
-    reports = db.readings
-    # convert the mongodb object to a list
-    data = list(reports.find())
+    if "username" in session:
+          # specify the collections name
+        reports = db.readings
+        # convert the mongodb object to a list
+        data = list(reports.find())
+        return render_template("tables.html",reports_info=data)
+    else:
+        return render_template('login.html')
 
-    return render_template("tables.html",reports_info=data)
 
 #Utilities-animation
 @app.route('/utilities-animation', methods=["GET"])
