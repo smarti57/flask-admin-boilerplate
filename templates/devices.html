@@ -15,11 +15,11 @@
 <!-- Default Card Example -->
 <div class="card mb-4">
   <div class="card-header">
-    {{ i['Device Name'] }}
+    <b>{{ i['Device Name'] }}</b>
   </div>
   <div class="card-body">
     Installation Location: {{ i['Installation Location'] }}</p>
-    Location: {{ i['Location'] }}</p>
+    Location:{{ i['lng'] }},{{ i['lat'] }}</p>
     Last Reported: {{ i['Last Reported'] }}</p>
     {{ ( timenow - i['Last Reported'])}} </p>
     Voltage: {{ i['Voltage'] }}</p>

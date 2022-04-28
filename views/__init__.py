@@ -100,11 +100,10 @@ def devices():
 def maps():
     if "username" in session:
         devices = db.devices
-        datetimenow = datetime.datetime.now()
         # convert the mongodb object to a list
         data = list(devices.find({},{"_id": 0,"Last Meter Reading": 0, "Last Reported": 0, "Owner": 0, "Installation Location":0, "Last Reported": 0, "Voltage": 0}))
 
-        return render_template("maps.html", device_data=data, timenow = datetimenow)
+        return render_template("maps.html", device_data=data)
     else:
         return render_template('login.html')
     # specify the collections name
