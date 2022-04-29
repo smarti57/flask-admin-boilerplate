@@ -101,7 +101,7 @@ def maps():
     if "username" in session:
         devices = db.devices
         # convert the mongodb object to a list
-        data = list(devices.find({},{"_id": 0,"Last Meter Reading": 0, "Last Reported": 0, "Owner": 0, "Installation Location":0, "Last Reported": 0, "Voltage": 0}))
+        data = list(devices.find({},{"_id": 0, "Owner": 0, "Installation Location":0}))
 
         return render_template("maps.html", device_data=data)
     else:
