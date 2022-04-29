@@ -10,7 +10,25 @@
         cursor: pointer;
         height: 32px;
         width: 32px;
-        background-image: url(static/marker.png);
+        background-image: url(static/markers/marker-normal.png);
+        background-color: rgba(0, 0, 0, 0);
+        transform: translate(28px, 56px, 0);
+      }
+      .marker-healthy {
+        border: none;
+        cursor: pointer;
+        height: 32px;
+        width: 32px;
+        background-image: url(static/markers/marker-healthy.png);
+        background-color: rgba(0, 0, 0, 0);
+        transform: translate(28px, 56px, 0);
+      }
+      .marker-unhealthy {
+        border: none;
+        cursor: pointer;
+        height: 32px;
+        width: 32px;
+        background-image: url(static/markers/marker-unhealthy.png);
         background-color: rgba(0, 0, 0, 0);
         transform: translate(28px, 56px, 0);
       }
@@ -31,7 +49,9 @@
     mapboxgl.accessToken = 'pk.eyJ1Ijoic21hcnRpNTciLCJhIjoiY2t6NXI1N2M1MHQ4dDJ3cDFobWp3bTIycSJ9.9_SviVjdOQNyj4NPg3iXOw';
     var map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/mapbox/outdoors-v11'
+    style: 'mapbox://styles/mapbox/outdoors-v11',
+    center: [-82, 33], // starting position [lng, lat],
+    zoom: 9
     });
 
     map.on('load', function () {
@@ -39,11 +59,23 @@
       //var stop_locations = {{ device_data|safe }}
       var stop_locations = device_data
       stop_locations.forEach(function(marker) {
-          var el = document.createElement('div');
+        var el = document.createElement('div');
+
+        if (marker["Voltage"] > 6.5) {
+          el.className = 'marker-healthy';
+        } else if(marker["Voltage"] < 6.25){
+          el.className = 'marker-unhealthy';
+        } else { 
           el.className = 'marker';
+        }
+
           el.style.left = '-15px';
           el.style.top = '-32px';
-        
+
+          el.addEventListener('click', () => {
+              window.alert(marker["Device Name"]+", Voltage: "+marker["Voltage"]+", Last Report: "+marker["Last Reported"]);
+          });
+
           new mapboxgl.Marker(el)
               .setLngLat([marker.lat,marker.lng])
               .addTo(map);
