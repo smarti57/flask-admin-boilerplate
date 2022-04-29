@@ -32,6 +32,13 @@
         background-color: rgba(0, 0, 0, 0);
         transform: translate(28px, 56px, 0);
       }
+      #map { top: 0; bottom: 0; width: 100%; }
+      #menu {
+       background: #efefef;
+       padding: 10px;
+       font-family: 'Open Sans', sans-serif;
+     }
+
 </style>
 <!-- Page Heading -->
 <h1 class="h3 mb-2 text-gray-800">Map</h1>
@@ -40,7 +47,19 @@
 <!-- Content Row -->
 <div class="row">
            
-<div id='map' style='width: 800px; height: 600px;'>
+<div id='map' style='width: 800px; height: 600px;'></div>
+
+  <div id="menu">
+    <input id="satellite-streets-v11" type="radio" name="rtoggle" value="satellite" checked="checked">
+    <!-- See a list of Mapbox-hosted public styles at -->
+    <!-- https://docs.mapbox.com/api/maps/styles/#mapbox-styles -->
+    <label for="satellite-streets-v11">satellite-streets</label>
+    <input id="streets-v11" type="radio" name="rtoggle" value="streets">
+    <label for="streets-v11">streets</label>
+    <input id="outdoors-v11" type="radio" name="rtoggle" value="outdoors">
+    <label for="outdoors-v11">outdoors</label>
+  </div>
+
 
   {% block javascript %}
     <script>
@@ -48,11 +67,21 @@
     device_data = {{ device_data | tojson }}
     mapboxgl.accessToken = 'pk.eyJ1Ijoic21hcnRpNTciLCJhIjoiY2t6NXI1N2M1MHQ4dDJ3cDFobWp3bTIycSJ9.9_SviVjdOQNyj4NPg3iXOw';
     var map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/outdoors-v11',
-    center: [-82, 33], // starting position [lng, lat],
-    zoom: 9
+      container: 'map',
+      style: 'mapbox://styles/mapbox/outdoors-v11',
+      center: [-82.1, 33.1], // starting position [lng, lat],
+      zoom: 9
     });
+
+    const layerList = document.getElementById('menu');
+    const inputs = layerList.getElementsByTagName('input');
+
+    for (const input of inputs) {
+      input.onclick = (layer) => {
+        const layerId = layer.target.id;
+        map.setStyle('mapbox://styles/mapbox/' + layerId);
+      };
+    }
 
     map.on('load', function () {
       // Add this to end of function
@@ -89,7 +118,7 @@
 
    
         
-</div>
+
 
 </div>
 <!-- /.container-fluid -->
