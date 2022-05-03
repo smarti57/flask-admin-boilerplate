@@ -8,17 +8,17 @@ app.secret_key = "ITSASECRET"
 #setting up mail
 app.config['MAIL_SERVER']='smtp.corp.janusresearch.com' #mail server
 app.config['MAIL_PORT'] = 587 #mail port
-app.config['MAIL_USERNAME'] = '' #email
-#app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD') #password
-app.config['MAIL_PASSWORD'] = '' #password
+app.config['MAIL_USERNAME'] = 'noreply@janusresearch.com' #email
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD') #password
+#app.config['MAIL_PASSWORD'] = '' #password
 app.config['MAIL_USE_TLS'] = True #security type
 app.config['MAIL_USE_SSL'] = False #security type
 
 #database connection parameters
 connection_params = {
     'user': 'flaskdb_user',
-   # 'password': os.environ.get('DB_PASSWORD'),
-    'password': 'HzZnJUgDiDkQ6dc3',
+    'password': os.environ.get('DB_PASSWORD'),
+    #'password': 'HzZnJUgDiDkQ6dc3',
     'host': 'cluster0.xrgdk.mongodb.net',
     'port': '27017',
     'namespace': 'myFirstDatabase',
