@@ -20,6 +20,7 @@
                       <th>Unit</th>
                       <th>Report Date</th>
                       <th>Value</th>
+                      <th>Thumbnail</th>
                     </tr>
                   </thead>
                   <tfoot>
@@ -27,6 +28,7 @@
                       <th>Unit</th>
                       <th>Report Date</th>
                       <th>Value</th>
+                      <th>Thumbnail</th>
                     </tr>
                   </tfoot>
                   <tbody>
@@ -35,6 +37,8 @@
                       <td>{{i["Unit"]}}</td>
                       <td>{{i["Date"]}}</td>
                       <td>{{i["Value"]}}</td>
+                      <td> <img src="static/thumbs/{{i["ThumbnailName"]}}" width="100" height="100"></td>
+
                     </tr>
                     {% endfor %}
                   </tbody>
