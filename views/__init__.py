@@ -1,9 +1,12 @@
-from flask import render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session
+from twilio.twiml.messaging_response import MessagingResponse
+from twilio.rest import Client
+
 from app import app
 from model import *
-import datetime
-
-
+import json
+from datetime import date, datetime
+import pytz
 
 @app.route('/', methods=["GET"])
 def home():
@@ -78,7 +81,19 @@ def cards():
 #Charts Page
 @app.route('/charts', methods=["GET"])
 def charts():
-    return render_template("charts.html")
+    if "username" in session:
+          # specify the collections name
+        reports = db.readings
+        # convert the mongodb object to a list
+        myquery = { "Unit":36 }
+        dates = list(reports.find(myquery,{"_id": 0, "Unit": 0, "Value":0, "ThumbnailName": 0, "FileName":0}))
+        dates_dump = json_util.dumps(dates)
+        data = list(reports.find(myquery,{"_id": 0,"Date":0, "Unit": 0,"ThumbnailName": 0, "FileName":0}))
+        data_dump = json_util.dumps(data)
+        return render_template("charts.html", reports_date=dates_dump, reports_info=data_dump)
+    else:
+        return render_template('login.html')
+
 
 #Devices Page
 @app.route('/devices', methods=["GET"])
@@ -86,7 +101,7 @@ def devices():
     if "username" in session:
             # specify the collections name
         devices = db.devices
-        datetimenow = datetime.datetime.now()
+        datetimenow = datetime.now()
         # convert the mongodb object to a list
         data = list(devices.find())
 
@@ -156,3 +171,32 @@ def user(username):
         {'author': user, 'body': 'Test post #2'}
     ]
     return render_template('user.html', user=user, posts=posts)
+
+@app.route("/sms", methods=['GET', 'POST'])
+def sms_reply():
+    """Respond to incoming calls with a simple text message."""
+    # Start our TwiML response
+    resp = MessagingResponse()
+
+    # Add a message
+    resp.message("The Robots are coming! Head for the hills!")
+
+    return str(resp)
+
+@app.route("/process", methods=['GET', 'POST'])
+def sms_readandprocess():
+    account_sid = 'AC891972f21eee99d4ed3d325d7528bb53'
+    auth_token = '6f1e355de6593c5c4bee26ef23452f91'
+        # auth_token = os.environ['K44v54cdEy6OoOQ2oGtmDvoxXAMlWMQZ']
+
+    datetimenow = datetime.now()
+    timezone = pytz.timezone("America/New_York")
+    d_aware = timezone.localize(datetimenow)
+    d_aware.tzinfo
+    client = Client(account_sid, auth_token)
+    records=[]
+    messages = client.messages.list(limit=250, to='+17623204402')
+    for record in messages:
+        records.append(record)
+
+    return render_template("processed-sms.html", device_reports=records,  timenow = d_aware)
