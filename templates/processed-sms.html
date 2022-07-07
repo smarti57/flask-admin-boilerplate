@@ -1,0 +1,115 @@
+{% include 'admin-layout.html' %}
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <p class="mb-4"></p>
+
+          <!-- DataTales Example -->
+          <div class="card shadow mb-4">
+            <div class="card-header py-3">
+              <h6 class="m-0 font-weight-bold text-primary">Device Daily Health Report Table</h6>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Report Date</th>
+                      <th>Age</th>
+                      <th>Message</th>
+                    </tr>
+                  </thead>
+                  <tfoot>
+                    <tr>
+                      <th>Report Date</th>
+                      <th>Age</th>
+                      <th>Message</th>
+                    </tr>
+                  </tfoot>
+                  <tbody>
+                    {% for i in device_reports %}
+                    <tr>
+                      <td>{{i["date_sent"]}}</td>
+                      <!-- <td>{{ (timenow - i['date_sent'])}}</td> -->
+                      <td>{{i["date_sent"]}}</td>
+                      <td>{{i["body"]}}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; JRG, LLC. 2022</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="static/vendor/jquery/jquery.min.js"></script>
+  <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="static/js/sb-admin-2.min.js"></script>
+
+  <!-- Page level plugins -->
+  <script src="static/vendor/datatables/jquery.dataTables.min.js"></script>
+  <script src="static/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+  <script src="static/vendor/Moment.js/moment.min.js"></script>
+
+
+
+  <script>
+
+  $(document).ready(function () {
+    $('#dataTable').DataTable({
+        order: [[0, 'desc']],
+        "pageLength": 25,
+        columnDefs: [
+            {
+                targets: 0,
+                render: function (data, type, row) {//data
+                  return moment(data).format('YYYY/MM/DD hh:mm:ss');
+                },
+            },
+            {
+                targets: 1,
+                render: function (data, type, row) {//data
+                  return moment(data,'YYYY/MM/DD hh:mm:ss').fromNow();
+                },
+            },
+        ],
+    });
+  });</script>
+
+</body>
+
+</html>
