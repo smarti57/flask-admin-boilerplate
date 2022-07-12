@@ -87,10 +87,27 @@ def charts():
         # convert the mongodb object to a list
         myquery = { "Unit":36 }
         dates = list(reports.find(myquery,{"_id": 0, "Unit": 0, "Value":0, "ThumbnailName": 0, "FileName":0}))
-        dates_dump = json_util.dumps(dates)
+        datelist = []
+        datalist = []
+        minvalue = 1000000
+        maxvalue = 0
+
+        for date in dates:
+            str_date = str(datetime.strftime(date["Date"], "%d-%m-%Y %I:%M:%S %p"))
+            datelist.append(str_date)
+    
+        dates_dump = json_util.dumps(list(datelist))
         data = list(reports.find(myquery,{"_id": 0,"Date":0, "Unit": 0,"ThumbnailName": 0, "FileName":0}))
-        data_dump = json_util.dumps(data)
-        return render_template("charts.html", reports_date=dates_dump, reports_info=data_dump)
+        for element in data:
+            datalist.append(element["Value"])
+            if element["Value"] != 0 and element["Value"] < minvalue:
+                minvalue = element["Value"]
+            if element["Value"] > maxvalue:
+                maxvalue = element ['Value']
+
+
+        data_dump = json_util.dumps(list(datalist))
+        return render_template("charts.html", reports_date=dates_dump, reports_info=data_dump, min_data = minvalue, max_data = maxvalue)
     else:
         return render_template('login.html')
 
@@ -99,7 +116,7 @@ def charts():
 @app.route('/devices', methods=["GET"])
 def devices():
     if "username" in session:
-            # specify the collections name
+        # specify the collections name
         devices = db.devices
         datetimenow = datetime.now()
         # convert the mongodb object to a list
@@ -185,8 +202,8 @@ def sms_reply():
 
 @app.route("/process", methods=['GET', 'POST'])
 def sms_readandprocess():
-    account_sid = 'AC891972f21eee99d4ed3d325d7528bb53'
-    auth_token = '6f1e355de6593c5c4bee26ef23452f91'
+    account_sid = 'SK7c441cae49f9082ba3e3e5d61cc6fb4e'
+    auth_token = 'K44v54cdEy6OoOQ2oGtmDvoxXAMlWMQZ'
         # auth_token = os.environ['K44v54cdEy6OoOQ2oGtmDvoxXAMlWMQZ']
 
     datetimenow = datetime.now()

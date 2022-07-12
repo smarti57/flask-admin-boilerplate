@@ -1,11 +1,11 @@
 {% include 'admin-layout.html' %}
+<script src="static/vendor/Moment.js/moment.min.js"></script>
 
         <!-- Begin Page Content -->
         <div class="container-fluid">
 
           <!-- Page Heading -->
           <h1 class="h3 mb-2 text-gray-800">Devices</h1>
-          <p class="mb-4">This is the Device Page</a>.</p>
 
           <!-- Content Row -->
           <div class="row">
@@ -13,16 +13,32 @@
             {% for i in device_info %}
 
 <!-- Default Card Example -->
+
+
 <div class="card mb-4">
+
+  <img class="card-img-top" src="static/InstallationImages/thumbs/{{i["Installation Image URL"]}}" width="360" height="360" alt="{{i["Installation Image URL"]}}">
   <div class="card-header">
     <b>{{ i['Device Name'] }}</b>
   </div>
   <div class="card-body">
-    Installation Location: {{ i['Installation Location'] }}</p>
-    Location:{{ i['lng'] }},{{ i['lat'] }}</p>
-    Last Reported: {{ i['Last Reported'] }}</p>
-    {{ ( timenow - i['Last Reported'])}} </p>
-    Voltage: {{ i['Voltage'] }}</p>
+    <p>Installed @: {{ i['Installation Location'] }}</p>
+    <p>Location: {{ i['lng'] }},{{ i['lat'] }}</p>
+    <p>Last Reported: 
+      <script>
+        document.write(moment([ {{i['Last Reported'].strftime('%Y, %m, %d')}} ],'YYYY/MM/DD hh:mm:ss').fromNow());
+      </script>
+    </p>
+    {% if i['Voltage'] > 6.5 %}
+      <p class="text-success">Voltage: {{ i['Voltage'] }}</p>
+    {% elif i['Voltage'] <= 6.3 %}
+      <p class="text-danger"> Voltage: {{ i['Voltage'] }}</p>
+    {% else %}
+      <p>Voltage: {{ i['Voltage'] }}</p>
+    {% endif %}
+
+     </p>
+    
   </div>
 </div>
           
@@ -41,7 +57,7 @@
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>Copyright &copy; JRG, LLC. 2021</span>
+            <span>Copyright &copy; JRG, LLC. 2022</span>
           </div>
         </div>
       </footer>
@@ -71,10 +87,6 @@
   <!-- Page level plugins -->
   <script src="static/vendor/chart.js/Chart.min.js"></script>
 
-  <!-- Page level custom scripts -->
-  <script src="static/js/demo/chart-area.js"></script>
-  <script src="static/js/demo/chart-pie.js"></script>
-  <script src="static/js/demo/chart-bar.js"></script>
 
 </body>
 
