@@ -126,10 +126,11 @@ def home():
                             maxvalue = element ['Value']
                     if(minvalue != 1000000):
                         daytotal = daytotal + (maxvalue - minvalue)
+            
+            
 
 
-
-        return render_template('index.html', monthlytotal = monthtotal, dailytotal = daytotal, numreported = len(reportedlist))
+        return render_template('index.html', monthlytotal = monthtotal, dailytotal = daytotal, numreported = len(reportedlist), imagesreceived = len(data))
     else:
         return render_template('login.html')
 
