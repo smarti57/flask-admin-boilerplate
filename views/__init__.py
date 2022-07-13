@@ -4,14 +4,132 @@ from twilio.rest import Client
 
 from app import app
 from model import *
-import json
-from datetime import date, datetime
+import json, os
+from datetime import date, datetime, timedelta
 import pytz
+
+#get previous month
+def monthdelta(date, delta):
+    m, y = (date.month+delta) % 12, date.year + ((date.month)+delta-1) // 12
+    if not m: m = 12
+    d = min(date.day, [31,
+        29 if y%4==0 and (not y%100==0 or y%400 == 0) else 28,
+        31,30,31,30,31,31,30,31,30,31][m-1])
+    return date.replace(day=d,month=m, year=y)
+
 
 @app.route('/', methods=["GET"])
 def home():
     if "username" in session:
-        return render_template('index.html')
+        timezone = pytz.timezone("America/New_York")
+
+        # Set datetime for 1 month ago
+        end = datetime.now()
+        end = timezone.localize(end)
+        onemonthago = (monthdelta(end, -1))
+
+        #Repeat for last 24 hours
+        onedayago = end - timedelta(hours = 24)
+
+        #Pull messages from twilio API for the last handful
+        account_sid = os.environ['TWILIO_SID'] 
+        auth_token = os.environ['TWILIO_TOKEN'] 
+       
+        reportedlist = []
+        client = Client(account_sid, auth_token)
+        messages = client.messages.list(limit=20, to='+17623204402')
+        reportedlist.append(messages[0].body.split("JRG")[1].split("@")[0])
+        for record in messages:
+            if (record.date_sent > onedayago):
+                append = True
+                bodyunit = record.body.split("JRG")[1].split("@")[0]
+
+                for unit in reportedlist:
+                    # print("Comparing Unit" + bodyunit + " with stored " + unit)
+                    if bodyunit == unit:
+                        #match found set flag
+                        #don't append flag
+                        # print("Match Found with " + bodyunit)
+                        append = False
+                if (append == True):
+                    reportedlist.append(bodyunit)
+                    """ print("Appended MsgBody is: " + bodyunit)
+                    print("Reported List")
+
+                    for thing in reportedlist:
+                        print(thing) """
+
+#        print(len(reportedlist))
+
+        reports = db.readings
+        devices = db.devices
+        devicelist = list(devices.find())
+
+        #Monthly TOTAL
+        monthtotal = 0
+
+        #DAILY TOTAL
+        daytotal = 0
+
+        #Loop over Units This is not a good idea for a bunch of units
+        for devicename in devicelist:
+
+            unitnum = (devicename["Device Name"].split("-")[1])
+
+            myquery = { "Unit":int(unitnum) , "Date": {"$gt": onemonthago}  }
+            datelist = []
+            datalist = []
+            minvalue = 1000000
+            maxvalue = 0
+
+            data = list(reports.find(myquery,{"_id": 0,"Date":0, "Unit": 0,"ThumbnailName": 0, "FileName":0}))
+            datalength = len(data)
+            if (datalength != 0 ):
+                #let's take the first value and the last value
+                # Probably want to do this to see if it's rolled over??? or if it's in order
+
+                if (data[0]["Value"] < data[datalength-1]["Value"]): # we might just get away with taking the two values
+                    minvalue = data[0]["Value"]
+                    maxvalue = data[datalength-1]["Value"]
+                    monthtotal = monthtotal + (maxvalue - minvalue)
+                else:
+                    for element in data:
+                        #datalist.append(element["Value"])
+                        if element["Value"] != 0 and element["Value"] < minvalue:
+                            minvalue = element["Value"]
+                        if element["Value"] > maxvalue:
+                            maxvalue = element ['Value']
+                    if(minvalue != 1000000):
+                        monthtotal = monthtotal + (maxvalue - minvalue)
+        
+            
+            #Do another query for this unit from a day ago
+            myquery = { "Unit":int(unitnum) , "Date": {"$gt": onedayago}  }
+            datelist = []
+            datalist = []
+            minvalue = 1000000
+            maxvalue = 0
+
+            data = list(reports.find(myquery,{"_id": 0,"Date":0, "Unit": 0,"ThumbnailName": 0, "FileName":0}))
+            if (len(data) != 0 ):
+                #let's take the first value and the last value.
+                if (data[0]["Value"] < data[datalength-1]["Value"]): # we might just get away with taking the two values
+                    minvalue = data[0]
+                    maxvalue = data[datalength-1]
+                    daytotal = daytotal + (maxvalue - minvalue)
+                else:
+                    for element in data:
+                        #datalist.append(element["Value"])
+                        if element["Value"] != 0 and element["Value"] < minvalue:
+                            minvalue = element["Value"]
+                        if element["Value"] > maxvalue:
+                            maxvalue = element ['Value']
+                    if(minvalue != 1000000):
+                        daytotal = daytotal + (maxvalue - minvalue)
+
+
+
+        return render_template('index.html', monthlytotal = monthtotal, dailytotal = daytotal, numreported = len(reportedlist))
     else:
         return render_template('login.html')
 
@@ -202,9 +320,9 @@ def sms_reply():
 
 @app.route("/process", methods=['GET', 'POST'])
 def sms_readandprocess():
-    account_sid = 'SK7c441cae49f9082ba3e3e5d61cc6fb4e'
-    auth_token = 'K44v54cdEy6OoOQ2oGtmDvoxXAMlWMQZ'
-        # auth_token = os.environ['K44v54cdEy6OoOQ2oGtmDvoxXAMlWMQZ']
+    account_sid = os.environ['TWILIO_SID'] 
+    auth_token = os.environ['TWILIO_TOKEN'] 
+
 
     datetimenow = datetime.now()
     timezone = pytz.timezone("America/New_York")
