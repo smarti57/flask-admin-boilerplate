@@ -39,10 +39,9 @@ onemonthago = (monthdelta(end, -1))
 onedayago = end - timedelta(hours = 24)
 
 #Pull messages from twilio API for the last handful
-#"TWILIO_SID":"AC891972f21eee99d4ed3d325d7528bb53",
-#"TWILIO_TOKEN":"7785a4fc12c49736eacfdd769d6291d5"
-account_sid = 'AC891972f21eee99d4ed3d325d7528bb53'
-auth_token = '7785a4fc12c49736eacfdd769d6291d5'
+account_sid = os.environ['TWILIO_SID'] 
+auth_token = os.environ['TWILIO_TOKEN'] 
+
 voltage=0
 reportedlist = []
 client = Client(account_sid, auth_token)
