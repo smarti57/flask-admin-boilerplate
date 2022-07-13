@@ -19,8 +19,11 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Active Watering (Daily)</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ range(10000, 40000) | random }} gal</div>
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Active Watering (24 hours)</div>
+
+
+
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ dailytotal }} acre in * .01</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -36,8 +39,8 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Active Watering (Monthly)</div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ range(240000, 800000) | random }} gal</div>
+              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Active Watering (Month)</div>
+              <div class="h5 mb-0 font-weight-bold text-gray-800">{{ monthlytotal }} acre in * .01</div>
             </div>
             <div class="col-auto">
               <i class="fas fa-images fa-2x text-gray-300"></i>
@@ -53,16 +56,13 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Percent Online (Daily)</div>
+              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Units Online (24 hours)</div>
               <div class="row no-gutters align-items-center">
                 <div class="col-auto">
-                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">6 of 8</div>
+                  <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{numreported}} of 8</div>
                 </div>
                 <div class="col">
-                  <div class="progress progress-sm mr-2">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 75%" aria-valuenow="50"
-                      aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
+
                 </div>
               </div>
             </div>
@@ -80,7 +80,7 @@
         <div class="card-body">
           <div class="row no-gutters align-items-center">
             <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Messages Received (Daily)</div>
+              <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Images Received (24 hours)</div>
               <div class="h5 mb-0 font-weight-bold text-gray-800">22</div>
             </div>
             <div class="col-auto">
@@ -94,37 +94,6 @@
 
   <!-- Content Row -->
 
-  <div class="row">
-
-    <!-- Area Chart -->
-    <div class="col-xl-12 col-lg-7">
-      <div class="card shadow mb-4">
-        <!-- Card Header - Dropdown -->
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">Watering Overview</h6>
-          <div class="dropdown no-arrow">
-            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
-              aria-haspopup="true" aria-expanded="false">
-              <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-            </a>
-         <!--   <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-              <div class="dropdown-header">Dropdown Header:</div>
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div> -->
-          </div>
-        </div>
-        <!-- Card Body -->
-        <div class="card-body">
-          <div class="chart-area">
-            <canvas id="myAreaChartNew"></canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <!-- Content Row -->
   <div class="row">
@@ -143,17 +112,17 @@
             <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="20"
               aria-valuemin="0" aria-valuemax="100"></div>
           </div>
-          <h4 class="small font-weight-bold">AI/ML Development Tracking<span class="float-right">40%</span></h4>
+          <h4 class="small font-weight-bold">AI/ML Development Tracking<span class="float-right">60%</span></h4>
           <div class="progress mb-4">
             <div class="progress-bar bg-danger" role="progressbar" style="width: 40%" aria-valuenow="40"
               aria-valuemin="0" aria-valuemax="100"></div>
           </div>
-          <h4 class="small font-weight-bold">Dashboard Development<span class="float-right">60%</span></h4>
+          <h4 class="small font-weight-bold">Dashboard Development<span class="float-right">80%</span></h4>
           <div class="progress mb-4">
             <div class="progress-bar bg-warning" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0"
               aria-valuemax="100"></div>
           </div>
-          <h4 class="small font-weight-bold">Cloud Deployment<span class="float-right">80%</span></h4>
+          <h4 class="small font-weight-bold">Cloud Deployment<span class="float-right">90%</span></h4>
           <div class="progress mb-4">
             <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0"
               aria-valuemax="100"></div>
@@ -234,12 +203,6 @@
 
 <!-- Custom scripts for all pages-->
 <script src="static/js/sb-admin-2.min.js"></script>
-
-<!-- Page level plugins -->
-<script src="static/vendor/chart.js/Chart.min.js"></script>
-
-<!-- Page level custom scripts -->
-<script src="static/js/demo/chart-area.js"></script>
 
 </body>
 
