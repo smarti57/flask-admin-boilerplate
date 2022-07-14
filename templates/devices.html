@@ -26,7 +26,7 @@
     <p>Location: {{ i['lng'] }},{{ i['lat'] }}</p>
     <p>Last Reported: 
       <script>
-        document.write(moment([ {{i['Last Reported'].strftime('%Y, %m, %d')}} ],'YYYY/MM/DD hh:mm:ss').fromNow());
+        document.write(moment(["{{i['Last Reported'].strftime('%Y, %m, %d, %H:%M:%S ')}}"],'YYYY, MM, DD, hh:mm:ss').fromNow());
       </script>
     </p>
     {% if i['Voltage'] > 6.5 %}

@@ -237,11 +237,11 @@ def devices():
     if "username" in session:
         # specify the collections name
         devices = db.devices
-        datetimenow = datetime.now()
+
         # convert the mongodb object to a list
         data = list(devices.find())
 
-        return render_template("devices.html", device_info=data, timenow = datetimenow)
+        return render_template("devices.html", device_info=data)
     else:
         return render_template('login.html')
 
